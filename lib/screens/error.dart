@@ -8,6 +8,16 @@ class Error extends StatefulWidget {
 class _ErrorState extends State<Error> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+        color: Colors.black,
+        child: const Center(
+            child: Text(
+          "Error, Please Restart",
+          textDirection: TextDirection.ltr,
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.redAccent,
+              fontSize: 20),
+        )));
   }
 }
