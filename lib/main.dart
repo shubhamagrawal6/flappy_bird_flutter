@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flappy_bird_flutter/screens/game.dart';
 import 'package:flappy_bird_flutter/screens/home.dart';
 import 'package:flappy_bird_flutter/screens/loading.dart';
 import 'package:flappy_bird_flutter/screens/error.dart';
@@ -66,10 +67,7 @@ class _RootState extends State<Root> {
                 firestore: _firestore,
               );
             } else {
-              return Home(
-                auth: _auth,
-                firestore: _firestore,
-              );
+              return Game();
             }
           } else {
             return Loading();
