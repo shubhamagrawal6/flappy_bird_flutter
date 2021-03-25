@@ -13,7 +13,7 @@ class Auth {
         email: email.trim(),
         password: password.trim(),
       );
-      return "Successfully Registered";
+      return "Successfully Registered\nWelcome";
     } on FirebaseAuthException catch (e) {
       return e.message;
     } catch (e) {
@@ -27,7 +27,7 @@ class Auth {
         email: email.trim(),
         password: password.trim(),
       );
-      return "Successfully Signed In";
+      return "Signed In Successfully\nWelcome";
     } on FirebaseAuthException catch (e) {
       return e.message;
     } catch (e) {
@@ -38,7 +38,7 @@ class Auth {
   Future<String> signOut() async {
     try {
       await auth.signOut();
-      return "Successfully Signed Out";
+      return "Signed Out Successfully";
     } on FirebaseAuthException catch (e) {
       return e.message;
     } catch (e) {
@@ -62,7 +62,7 @@ class Auth {
       await auth.sendPasswordResetEmail(
         email: email.trim(),
       );
-      return "Please check e-mail";
+      return "Please check E-mail";
     } on FirebaseAuthException catch (e) {
       return e.message;
     } catch (e) {
