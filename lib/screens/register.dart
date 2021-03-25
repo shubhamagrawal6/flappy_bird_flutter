@@ -1,26 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flappy_bird_flutter/screens/register.dart';
 import 'package:flappy_bird_flutter/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class Login extends StatefulWidget {
+class Register extends StatefulWidget {
   final FirebaseAuth auth;
   final FirebaseFirestore firestore;
+  final TextEditingController emailController;
 
-  const Login({
+  const Register({
     Key key,
     @required this.auth,
     @required this.firestore,
+    @required this.emailController,
   }) : super(key: key);
 
   @override
-  _LoginState createState() => _LoginState();
+  _RegisterState createState() => _RegisterState();
 }
 
-class _LoginState extends State<Login> {
-  final TextEditingController _emailController = TextEditingController();
+class _RegisterState extends State<Register> {
   final TextEditingController _passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -57,36 +57,36 @@ class _LoginState extends State<Login> {
                             width: 220,
                             height: 50,
                             child: TextFormField(
-                              key: const ValueKey("username"),
+                              key: const ValueKey("setusername"),
                               textAlign: TextAlign.left,
                               decoration: const InputDecoration(
                                 border: InputBorder.none,
                                 filled: true,
                                 fillColor: Color(0xffD7D7D7),
-                                hintText: "Username",
+                                hintText: "Set Username",
                                 prefixIcon: Padding(
                                   padding: EdgeInsets.all(0),
                                   child: Icon(Icons.person),
                                 ),
                               ),
-                              controller: _emailController,
+                              controller: widget.emailController,
                             ),
                           ),
                           const SizedBox(
-                            height: 10.0,
+                            height: 20.0,
                           ),
                           SizedBox(
                             width: 220,
                             height: 50,
                             child: TextFormField(
                               obscureText: true,
-                              key: const ValueKey("password"),
+                              key: const ValueKey("setpassword"),
                               textAlign: TextAlign.left,
                               decoration: const InputDecoration(
                                 border: InputBorder.none,
                                 filled: true,
                                 fillColor: Color(0xffD7D7D7),
-                                hintText: "Password",
+                                hintText: "Set Password",
                                 prefixIcon: Padding(
                                   padding: EdgeInsets.all(0),
                                   child: Icon(Icons.lock),
@@ -95,44 +95,26 @@ class _LoginState extends State<Login> {
                               controller: _passwordController,
                             ),
                           ),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: TextButton(
-                              onPressed: () async {
-                                final String retVal =
-                                    await Auth(auth: widget.auth).resetPassword(
-                                  email: _emailController.text,
-                                );
-                                HapticFeedback.lightImpact();
-                                if (retVal == "Success") {
-                                  _emailController.clear();
-                                  _passwordController.clear();
-                                } else {
-                                  Scaffold.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(retVal),
-                                    ),
-                                  );
-                                }
-                              },
-                              child: const Text("Forgot Password?"),
-                            ),
+                          const SizedBox(
+                            height: 20,
                           ),
                           // ignore: deprecated_member_use
                           RaisedButton(
-                            key: const ValueKey("signIn"),
+                            key: const ValueKey("register"),
                             color: const Color(0xFF00B2FF),
                             onPressed: () async {
                               final String retVal =
-                                  await Auth(auth: widget.auth).signIn(
-                                email: _emailController.text,
+                                  await Auth(auth: widget.auth).createAccount(
+                                email: widget.emailController.text,
                                 password: _passwordController.text,
                               );
                               HapticFeedback.lightImpact();
                               if (retVal == "Success") {
-                                _emailController.clear();
+                                widget.emailController.clear();
                                 _passwordController.clear();
+                                Navigator.pop(context);
                               } else {
+                                // ignore: deprecated_member_use
                                 Scaffold.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(retVal),
@@ -141,28 +123,10 @@ class _LoginState extends State<Login> {
                               }
                             },
                             child: const Text(
-                              "Log In",
+                              "Register",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white),
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Register(
-                                            auth: widget.auth,
-                                            firestore: widget.firestore,
-                                            emailController: _emailController,
-                                          )));
-                              HapticFeedback.lightImpact();
-                            },
-                            child: const Text(
-                              "Register",
-                              style: TextStyle(
-                                  decoration: TextDecoration.underline),
                             ),
                           ),
                         ]),
