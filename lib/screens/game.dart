@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flappy_bird_flutter/models/bird.dart';
+import 'package:flappy_bird_flutter/models/walls.dart';
 import 'package:flutter/material.dart';
 
 class Game extends StatefulWidget {
@@ -14,6 +15,8 @@ class _GameState extends State<Game> {
   double height = 0;
   double initialHeight = birdYaxis;
   bool gameHasStarted = false;
+  double wallX1 = 0;
+  double wallX2 = 1.3;
 
   void startTimer() {
     gameHasStarted = true;
@@ -21,6 +24,8 @@ class _GameState extends State<Game> {
       time += 0.0001;
       height = -4.9 * time * time + 3 * time;
       setState(() {
+        wallX1 -= 0.5;
+        wallX2 -= 0.5;
         birdYaxis = initialHeight - height;
       });
       if (birdYaxis > 1) {
@@ -52,18 +57,45 @@ class _GameState extends State<Game> {
           children: [
             Expanded(
               flex: 2,
-              child: AnimatedContainer(
-                alignment: Alignment(0, birdYaxis),
-                duration: const Duration(milliseconds: 0),
-                color: const Color(0xff90F4C4),
-                child: Bird(),
-              ),
+              child: Stack(children: [
+                AnimatedContainer(
+                  alignment: Alignment(0, birdYaxis),
+                  duration: const Duration(milliseconds: 0),
+                  color: const Color(0xff90F4C4),
+                  child: Bird(),
+                ),
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 0),
+                  alignment: Alignment(wallX1, 1.03),
+                  child: Wall(size: 200.0),
+                ),
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 0),
+                  alignment: Alignment(wallX1, -1.03),
+                  child: Wall(size: 200.0),
+                ),
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 0),
+                  alignment: Alignment(wallX2, 1.03),
+                  child: Wall(size: 200.0),
+                ),
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 0),
+                  alignment: Alignment(wallX2, -1.03),
+                  child: Wall(size: 200.0),
+                ),
+              ]),
             ),
-            Expanded(
-              child: Container(
-                color: Colors.green,
-              ),
-            )
+            Container(
+              color: Colors.green,
+              height: 10,
+              width: 360,
+            ),
+            Container(
+              color: Colors.brown,
+              height: 160,
+              width: 360,
+            ),
           ],
         ),
       ),
