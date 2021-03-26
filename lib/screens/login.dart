@@ -99,15 +99,16 @@ class _LoginState extends State<Login> {
                             alignment: Alignment.centerLeft,
                             child: TextButton(
                               onPressed: () async {
+                                HapticFeedback.lightImpact();
                                 final String retVal =
                                     await Auth(auth: widget.auth).resetPassword(
                                   email: _emailController.text,
                                 );
-                                HapticFeedback.lightImpact();
                                 if (retVal == "Success") {
                                   _emailController.clear();
                                   _passwordController.clear();
                                 } else {
+                                  // ignore: deprecated_member_use
                                   Scaffold.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text(retVal),
@@ -123,16 +124,17 @@ class _LoginState extends State<Login> {
                             key: const ValueKey("signIn"),
                             color: const Color(0xFF00B2FF),
                             onPressed: () async {
+                              HapticFeedback.lightImpact();
                               final String retVal =
                                   await Auth(auth: widget.auth).signIn(
                                 email: _emailController.text,
                                 password: _passwordController.text,
                               );
-                              HapticFeedback.lightImpact();
                               if (retVal == "Success") {
                                 _emailController.clear();
                                 _passwordController.clear();
                               } else {
+                                // ignore: deprecated_member_use
                                 Scaffold.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(retVal),
@@ -143,26 +145,30 @@ class _LoginState extends State<Login> {
                             child: const Text(
                               "Log In",
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Register(
-                                            auth: widget.auth,
-                                            firestore: widget.firestore,
-                                            emailController: _emailController,
-                                          )));
                               HapticFeedback.lightImpact();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Register(
+                                    auth: widget.auth,
+                                    firestore: widget.firestore,
+                                    emailController: _emailController,
+                                  ),
+                                ),
+                              );
                             },
                             child: const Text(
                               "Register",
                               style: TextStyle(
-                                  decoration: TextDecoration.underline),
+                                decoration: TextDecoration.underline,
+                              ),
                             ),
                           ),
                         ]),

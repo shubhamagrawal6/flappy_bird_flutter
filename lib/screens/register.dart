@@ -27,30 +27,31 @@ class _RegisterState extends State<Register> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xff90F4C4),
-      body: Builder(builder: (BuildContext context) {
-        return Column(
-          children: <Widget>[
-            const SizedBox(
-              height: 60,
-            ),
-            Center(child: Image.asset("assets/Title.png")),
-            Expanded(
-              child: Container(
-                color: Colors.transparent,
-                width: 360,
-                child: Center(
-                  child: Container(
-                    height: 320,
-                    width: 270,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: const Color(0xFF00B2FF),
-                        width: 10.0,
+      body: Builder(
+        builder: (BuildContext context) {
+          return Column(
+            children: <Widget>[
+              const SizedBox(
+                height: 60,
+              ),
+              Center(child: Image.asset("assets/Title.png")),
+              Expanded(
+                child: Container(
+                  color: Colors.transparent,
+                  width: 360,
+                  child: Center(
+                    child: Container(
+                      height: 320,
+                      width: 270,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: const Color(0xFF00B2FF),
+                          width: 10.0,
+                        ),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30.0),
                       ),
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    child: Column(
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           SizedBox(
@@ -103,12 +104,12 @@ class _RegisterState extends State<Register> {
                             key: const ValueKey("register"),
                             color: const Color(0xFF00B2FF),
                             onPressed: () async {
+                              HapticFeedback.lightImpact();
                               final String retVal =
                                   await Auth(auth: widget.auth).createAccount(
                                 email: widget.emailController.text,
                                 password: _passwordController.text,
                               );
-                              HapticFeedback.lightImpact();
                               if (retVal == "Success") {
                                 widget.emailController.clear();
                                 _passwordController.clear();
@@ -129,24 +130,26 @@ class _RegisterState extends State<Register> {
                                   color: Colors.white),
                             ),
                           ),
-                        ]),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-            Container(
-              color: Colors.green,
-              height: 10,
-              width: 360,
-            ),
-            Container(
-              color: Colors.brown,
-              height: 160,
-              width: 360,
-            ),
-          ],
-        );
-      }),
+              Container(
+                color: Colors.green,
+                height: 10,
+                width: 360,
+              ),
+              Container(
+                color: Colors.brown,
+                height: 160,
+                width: 360,
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }

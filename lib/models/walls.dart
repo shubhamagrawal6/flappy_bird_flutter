@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class Wall extends StatelessWidget {
   final double size;
-  Wall({this.size});
+  const Wall({this.size});
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +11,7 @@ class Wall extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         color: Colors.green,
-        border: Border.all(width: 5, color: Color(0xFF038D00)),
+        border: Border.all(width: 5, color: const Color(0xFF038D00)),
       ),
     );
   }
