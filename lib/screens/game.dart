@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'dart:math';
 import 'package:flappy_bird_flutter/models/bird.dart';
 import 'package:flappy_bird_flutter/models/walls.dart';
 import 'package:flutter/material.dart';
@@ -15,22 +15,62 @@ class _GameState extends State<Game> {
   double height = 0;
   double initialHeight = birdYaxis;
   bool gameHasStarted = false;
-  double wallX1 = 0;
-  double wallX2 = 1.3;
+  static double wallX1 = 1.2;
+  double wallX2 = wallX1 + 1.5;
+  Random rng = Random();
+  double gapSize1;
+  double gapSize2;
+  double size1up = 200.0;
+  double size1down = 200.0;
+  double size2up = 300.0;
+  double size2down = 150.0;
 
   void startTimer() {
     gameHasStarted = true;
-    Timer.periodic(const Duration(microseconds: 1), (timer) {
-      time += 0.0001;
-      height = -4.9 * time * time + 3 * time;
+    Timer.periodic(const Duration(microseconds: 60), (timer) {
+      time += 0.00015;
+      height = -4.9 * time * time + 2.8 * time;
+      birdYaxis = initialHeight - height;
+
       setState(() {
-        wallX1 -= 0.5;
-        wallX2 -= 0.5;
-        birdYaxis = initialHeight - height;
+        if (wallX1 < -1.4) {
+          gapSize1 = 100 * rng.nextDouble() + 100;
+          size1up = (500 - gapSize1) * ((rng.nextInt(60) / 100.0) + 0.2);
+          size1down = ((600 - gapSize1) - size1up).abs();
+          wallX1 += 2.9;
+        } else {
+          wallX1 -= 0.00025;
+        }
       });
-      if (birdYaxis > 1) {
+
+      setState(() {
+        if (wallX2 < -1.4) {
+          gapSize2 = 200 * rng.nextDouble() + 100;
+          size2up = (500 - gapSize2) * ((rng.nextInt(60) / 100.0) + 0.2);
+          size2down = ((500 - gapSize2) - size2up).abs();
+          wallX2 += 2.9;
+        } else {
+          wallX2 -= 0.00025;
+        }
+      });
+
+      if (birdYaxis > 1.05) {
         timer.cancel();
         gameHasStarted = false;
+      }
+
+      if (wallX1 > -0.35 && wallX1 < 0.35) {
+        if (birdYaxis < -(size1up / 623) || birdYaxis > (size1up / 623)) {
+          timer.cancel();
+          gameHasStarted = false;
+        }
+      }
+
+      if (wallX2 > -0.35 && wallX2 < 0.35) {
+        if (birdYaxis < -(size2up / 623) || birdYaxis > (size2up / 623)) {
+          timer.cancel();
+          gameHasStarted = false;
+        }
       }
     });
   }
@@ -66,23 +106,23 @@ class _GameState extends State<Game> {
                 ),
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 0),
-                  alignment: Alignment(wallX1, 1.03),
-                  child: Wall(size: 200.0),
+                  alignment: Alignment(wallX1, 1.025),
+                  child: Wall(size: size1down),
                 ),
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 0),
-                  alignment: Alignment(wallX1, -1.03),
-                  child: Wall(size: 200.0),
+                  alignment: Alignment(wallX1, -1.025),
+                  child: Wall(size: size1up),
                 ),
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 0),
-                  alignment: Alignment(wallX2, 1.03),
-                  child: Wall(size: 200.0),
+                  alignment: Alignment(wallX2, 1.025),
+                  child: Wall(size: size2down),
                 ),
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 0),
-                  alignment: Alignment(wallX2, -1.03),
-                  child: Wall(size: 200.0),
+                  alignment: Alignment(wallX2, -1.025),
+                  child: Wall(size: size2up),
                 ),
               ]),
             ),
