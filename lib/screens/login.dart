@@ -179,12 +179,12 @@ class _LoginState extends State<Login> {
             Container(
               color: Colors.green,
               height: 10,
-              width: 360,
+              width: 3000,
             ),
             Container(
               color: Colors.brown,
               height: 160,
-              width: 360,
+              width: 3000,
             ),
           ],
         );

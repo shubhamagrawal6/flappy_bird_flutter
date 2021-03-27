@@ -33,67 +33,74 @@ class _GameState extends State<Game> {
   Random rng = Random();
   double gapSize1;
   double gapSize2;
-  double size1up = 200.0;
-  double size1down = 200.0;
-  double size2up = 300.0;
+  double size1up = 150.0;
+  double size1down = 150.0;
+  double size2up = 200.0;
   double size2down = 150.0;
+  double speed = 0.000075;
   int score = 0;
 
   void startTimer() {
     gameHasStarted = true;
-    Timer.periodic(const Duration(microseconds: 60), (timer) {
-      time += 0.00015;
-      height = -4.9 * time * time + 2.8 * time;
-      birdYaxis = initialHeight - height;
+    Timer.periodic(
+      const Duration(microseconds: 60),
+      (timer) {
+        time += 0.000030;
+        height = -4.9 * time * time + 2.8 * time;
+        birdYaxis = initialHeight - height;
 
-      setState(() {
-        if (wallX1 < -1.4) {
-          gapSize1 = 100 * rng.nextDouble() + 100;
-          size1up = (500 - gapSize1) * ((rng.nextInt(60) / 100.0) + 0.2);
-          size1down = ((500 - gapSize1) - size1up).abs();
-          wallX1 += 2.9;
-          score += 1;
-        } else {
-          wallX1 -= 0.00025;
-        }
-      });
+        setState(() {
+          if (wallX1 < -1.4) {
+            gapSize1 = 100 * rng.nextDouble() + 100;
+            size1up = (500 - gapSize1) * ((rng.nextInt(60) / 100.0) + 0.2);
+            size1down = ((500 - gapSize1) - size1up).abs();
+            wallX1 += 2.9;
+            score += 1;
+          } else {
+            wallX1 -= speed;
+          }
+        });
 
-      setState(() {
-        if (wallX2 < -1.4) {
-          gapSize2 = 200 * rng.nextDouble() + 100;
-          size2up = (500 - gapSize2) * ((rng.nextInt(60) / 100.0) + 0.2);
-          size2down = ((500 - gapSize2) - size2up).abs();
-          wallX2 += 2.9;
-          score += 1;
-        } else {
-          wallX2 -= 0.00025;
-        }
-      });
+        setState(() {
+          if (wallX2 < -1.4) {
+            gapSize2 = 200 * rng.nextDouble() + 100;
+            size2up = (500 - gapSize2) * ((rng.nextInt(60) / 100.0) + 0.2);
+            size2down = ((500 - gapSize2) - size2up).abs();
+            wallX2 += 2.9;
+            score += 1;
+            if (score % 10 == 0) {
+              speed += 0.000025;
+            }
+          } else {
+            wallX2 -= speed;
+          }
+        });
 
-      if (birdYaxis > 1.05) {
-        timer.cancel();
-        gameHasStarted = false;
-        _showDialog();
-      }
-
-      if (wallX1 > -0.35 && wallX1 < 0.35) {
-        if (birdYaxis < -(1 - size1up / 311) ||
-            birdYaxis > (1 - size1down / 311)) {
+        if (birdYaxis > 1.05) {
           timer.cancel();
           gameHasStarted = false;
           _showDialog();
         }
-      }
 
-      if (wallX2 > -0.35 && wallX2 < 0.35) {
-        if (birdYaxis < -(1 - size2up / 311) ||
-            birdYaxis > (1 - size2down / 311)) {
-          timer.cancel();
-          gameHasStarted = false;
-          _showDialog();
+        if (wallX1 > -0.35 && wallX1 < 0.35) {
+          if (birdYaxis < -(1 - size1up / 311) ||
+              birdYaxis > (1 - size1down / 311)) {
+            timer.cancel();
+            gameHasStarted = false;
+            _showDialog();
+          }
         }
-      }
-    });
+
+        if (wallX2 > -0.35 && wallX2 < 0.35) {
+          if (birdYaxis < -(1 - size2up / 311) ||
+              birdYaxis > (1 - size2down / 311)) {
+            timer.cancel();
+            gameHasStarted = false;
+            _showDialog();
+          }
+        }
+      },
+    );
   }
 
   void jump() {
@@ -107,6 +114,10 @@ class _GameState extends State<Game> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        Database(firestore: widget.firestore).updateScore(
+          uid: widget.auth.currentUser.uid,
+          score: score,
+        );
         return AlertDialog(
           backgroundColor: Colors.white,
           title: const Text(
@@ -134,11 +145,12 @@ class _GameState extends State<Game> {
                   initialHeight = birdYaxis;
                   wallX1 = 1.3;
                   wallX2 = wallX1 + 1.5;
-                  size1up = 200.0;
-                  size1down = 200.0;
-                  size2up = 300.0;
+                  size1up = 150.0;
+                  size1down = 150.0;
+                  size2up = 200.0;
                   size2down = 150.0;
                   score = 0;
+                  speed = 0.000050;
                   gameHasStarted = false;
                 });
                 Navigator.of(context).pop();
@@ -178,10 +190,6 @@ class _GameState extends State<Game> {
         onTap: () {
           if (gameHasStarted) {
             jump();
-            Database(firestore: widget.firestore).updateScore(
-              uid: widget.auth.currentUser.uid,
-              score: score,
-            );
           } else {
             startTimer();
           }
@@ -243,12 +251,12 @@ class _GameState extends State<Game> {
             Container(
               color: Colors.green,
               height: 10,
-              width: 360,
+              width: 3000,
             ),
             Container(
               color: Colors.brown,
               height: 160,
-              width: 360,
+              width: 3000,
             ),
           ],
         ),

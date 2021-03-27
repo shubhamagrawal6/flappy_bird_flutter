@@ -33,8 +33,8 @@ class _LoadingState extends State<Loading> {
                 width: 150.0,
                 child: CircularProgressIndicator(
                   strokeWidth: 15.0,
-                  color: Color(0xff00b200),
-                  backgroundColor: Color(0xff794C2B),
+                  backgroundColor: Colors.green,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.brown),
                 ),
               ),
             ),

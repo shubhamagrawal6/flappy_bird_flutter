@@ -109,6 +109,7 @@ class _RegisterState extends State<Register> {
                                   await Auth(auth: widget.auth).createAccount(
                                 email: widget.emailController.text,
                                 password: _passwordController.text,
+                                firestore: widget.firestore,
                               );
                               if (retVal == "Success") {
                                 widget.emailController.clear();
@@ -139,12 +140,12 @@ class _RegisterState extends State<Register> {
               Container(
                 color: Colors.green,
                 height: 10,
-                width: 360,
+                width: 3000,
               ),
               Container(
                 color: Colors.brown,
                 height: 160,
-                width: 360,
+                width: 3000,
               ),
             ],
           );
