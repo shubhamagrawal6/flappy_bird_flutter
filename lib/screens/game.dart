@@ -52,7 +52,7 @@ class _GameState extends State<Game> {
         setState(() {
           if (wallX1 < -1.4) {
             gapSize1 = 100 * rng.nextDouble() + 100;
-            size1up = (500 - gapSize1) * ((rng.nextInt(60) / 100.0) + 0.2);
+            size1up = (600 - gapSize1) * ((rng.nextInt(60) / 100.0) + 0.2);
             size1down = ((500 - gapSize1) - size1up).abs();
             wallX1 += 2.9;
             score += 1;
@@ -63,8 +63,8 @@ class _GameState extends State<Game> {
 
         setState(() {
           if (wallX2 < -1.4) {
-            gapSize2 = 200 * rng.nextDouble() + 100;
-            size2up = (500 - gapSize2) * ((rng.nextInt(60) / 100.0) + 0.2);
+            gapSize2 = 100 * rng.nextDouble() + 100;
+            size2up = (600 - gapSize2) * ((rng.nextInt(60) / 100.0) + 0.2);
             size2down = ((500 - gapSize2) - size2up).abs();
             wallX2 += 2.9;
             score += 1;
@@ -83,8 +83,8 @@ class _GameState extends State<Game> {
         }
 
         if (wallX1 > -0.35 && wallX1 < 0.35) {
-          if (birdYaxis < -(1 - size1up / 311) ||
-              birdYaxis > (1 - size1down / 311)) {
+          if (birdYaxis < ((size1up / 300) - 1) ||
+              birdYaxis > (1 - (size1down / 300))) {
             timer.cancel();
             gameHasStarted = false;
             _showDialog();
@@ -92,8 +92,8 @@ class _GameState extends State<Game> {
         }
 
         if (wallX2 > -0.35 && wallX2 < 0.35) {
-          if (birdYaxis < -(1 - size2up / 311) ||
-              birdYaxis > (1 - size2down / 311)) {
+          if (birdYaxis < ((size2up / 300) - 1) ||
+              birdYaxis > (1 - size2down / 300)) {
             timer.cancel();
             gameHasStarted = false;
             _showDialog();
@@ -196,8 +196,9 @@ class _GameState extends State<Game> {
         },
         child: Column(
           children: [
-            Expanded(
-              flex: 2,
+            SizedBox(
+              width: 3000,
+              height: 600,
               child: Stack(children: [
                 AnimatedContainer(
                   alignment: Alignment(0, birdYaxis),
@@ -207,22 +208,22 @@ class _GameState extends State<Game> {
                 ),
                 AnimatedContainer(
                   duration: const Duration(),
-                  alignment: Alignment(wallX1, 1.025),
+                  alignment: Alignment(wallX1, 1),
                   child: Wall(size: size1down),
                 ),
                 AnimatedContainer(
                   duration: const Duration(),
-                  alignment: Alignment(wallX1, -1.025),
+                  alignment: Alignment(wallX1, -1),
                   child: Wall(size: size1up),
                 ),
                 AnimatedContainer(
                   duration: const Duration(),
-                  alignment: Alignment(wallX2, 1.025),
+                  alignment: Alignment(wallX2, 1),
                   child: Wall(size: size2down),
                 ),
                 AnimatedContainer(
                   duration: const Duration(),
-                  alignment: Alignment(wallX2, -1.025),
+                  alignment: Alignment(wallX2, -1),
                   child: Wall(size: size2up),
                 ),
                 AnimatedContainer(
@@ -253,10 +254,12 @@ class _GameState extends State<Game> {
               height: 10,
               width: 3000,
             ),
-            Container(
-              color: Colors.brown,
-              height: 160,
-              width: 3000,
+            Expanded(
+              child: Container(
+                color: Colors.brown,
+                height: 160,
+                width: 3000,
+              ),
             ),
           ],
         ),
