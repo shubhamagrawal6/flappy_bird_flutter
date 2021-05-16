@@ -13,6 +13,7 @@ class ScoreModel {
 
   ScoreModel.fromDocumentSnapshot({DocumentSnapshot documentSnapshot}) {
     uid = documentSnapshot.id;
-    score = documentSnapshot.data()["score"] as String;
+    final temp = documentSnapshot;
+    score = temp.get('score') as String;
   }
 }
